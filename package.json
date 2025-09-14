@@ -1,6 +1,6 @@
 {
   "name": "expo-gradle-jvmargs",
-  "version": "1.0.0",
+  "version": "1.0.0-experimental-8a8e9a7e-20250914",
   "description": "Expo config plugin to enforce Gradle JVM args (-Xmx, MaxMetaspaceSize).",
   "main": "app.plugin.js",
   "types": "plugin/build/withGradleJvmArgs.d.ts",
