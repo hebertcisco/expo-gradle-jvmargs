@@ -6,7 +6,7 @@
   "types": "plugin/build/withGradleJvmArgs.d.ts",
   "scripts": {
     "build": "echo 'no build step'",
-    "test": "echo 'no tests' && exit 0",
+    "test": "jest --runInBand",
     "prepublishOnly": "npm run build"
   },
   "keywords": [
@@ -30,7 +30,9 @@
     "README.md"
   ],
   "dependencies": {},
-  "devDependencies": {},
+  "devDependencies": {
+    "jest": "^29"
+  },
   "peerDependencies": {
     "@expo/config-plugins": "*"
   }
