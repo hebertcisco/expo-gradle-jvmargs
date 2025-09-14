@@ -1,0 +1,37 @@
+{
+  "name": "expo-gradle-jvmargs",
+  "version": "1.0.0",
+  "description": "Expo config plugin to enforce Gradle JVM args (-Xmx, MaxMetaspaceSize).",
+  "main": "app.plugin.js",
+  "types": "plugin/build/withGradleJvmArgs.d.ts",
+  "scripts": {
+    "build": "echo 'no build step'",
+    "test": "echo 'no tests' && exit 0",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "react-native",
+    "expo",
+    "expo-gradle-jvmargs"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hebertcisco/expo-gradle-jvmargs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hebertcisco/expo-gradle-jvmargs/issues"
+  },
+  "author": "hebertcisco",
+  "license": "MIT",
+  "homepage": "https://github.com/hebertcisco/expo-gradle-jvmargs",
+  "files": [
+    "app.plugin.js",
+    "plugin/build",
+    "README.md"
+  ],
+  "dependencies": {},
+  "devDependencies": {},
+  "peerDependencies": {
+    "@expo/config-plugins": "*"
+  }
+}
