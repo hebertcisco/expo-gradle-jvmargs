@@ -1,1 +1,1 @@
-module.exports = require("./plugin/build/withGradleJvmArgs");
+module.exports = require('./plugin/build/withGradleJvmArgs').default;

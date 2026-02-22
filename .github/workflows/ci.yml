@@ -2,20 +2,33 @@ name: CI
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [main]
   pull_request:
-    branches: [ main, master ]
+    branches: [main]
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20, 22, 24]
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: 'yarn'
+          node-version: ${{ matrix.node-version }}
+          cache: yarn
+
       - name: Install dependencies
-        run: yarn install --frozen-lockfile || yarn install
-      - name: Run tests
+        run: yarn install --frozen-lockfile
+
+      - name: Type-check
+        run: yarn typecheck
+
+      - name: Build
+        run: yarn build
+
+      - name: Test
         run: yarn test

@@ -3,12 +3,12 @@ jest.mock('@expo/config-plugins', () => {
   return {
     // Directly run the provided action with the given config
     withGradleProperties: (config, action) => action(config),
-    // Pass-through, we don't need run-once semantics in tests
+    // Pass-through: we don't need run-once semantics in tests
     createRunOncePlugin: (impl) => impl,
   };
 }, { virtual: true });
 
-const plugin = require('../plugin/build/withGradleJvmArgs');
+const plugin = require('../plugin/build/withGradleJvmArgs').default;
 
 function prop(key, value) {
   return { type: 'property', key, value };
@@ -53,7 +53,7 @@ describe('withGradleJvmArgs config plugin', () => {
     const config = { modResults: [prop(KEY, existing)] };
     const result = plugin(config, { extraArgs: ['-Dopt=1', '-Dnew=2'] });
     const entry = result.modResults.find((p) => p.key === KEY);
-    // -Dopt=1 is preserved (merged), extraArgs re-add is deduped
+    // -Dopt=1 is preserved via merge; the duplicate from extraArgs is deduped
     expect(entry.value).toBe('-Xmx2048m -XX:MaxMetaspaceSize=512m -Dopt=1 -Dnew=2');
   });
 
@@ -62,7 +62,7 @@ describe('withGradleJvmArgs config plugin', () => {
     const config = { modResults: [prop(KEY, existing)] };
     const result = plugin(config, {});
     const entry = result.modResults.find((p) => p.key === KEY);
-    // One -Dfoo=bar remains
+    // Only one -Dfoo=bar remains
     expect(entry.value).toBe('-Xmx2048m -XX:MaxMetaspaceSize=512m -Dfoo=bar');
   });
 });
