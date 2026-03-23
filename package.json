@@ -42,12 +42,12 @@
   },
   "resolutions": {
     "js-yaml": ">=3.14.2",
-    "glob/minimatch": ">=10.2.1"
+    "glob/minimatch": "10.2.3"
   },
   "overrides": {
     "js-yaml": ">=3.14.2",
     "glob": {
-      "minimatch": ">=10.2.1"
+      "minimatch": "10.2.3"
     }
   }
 }
