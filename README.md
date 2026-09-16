@@ -61,7 +61,9 @@ module.exports = {
 - `xmx`: Java heap size (e.g., `1024m`, `2048m`, `4g`). Default: `2048m`.
 - `maxMetaspace`: JVM metaspace size (e.g., `256m`, `512m`). Default: `512m`.
 - `merge`: When `true`, preserves any existing `org.gradle.jvmargs` tokens other than `-Xmx*` and `-XX:MaxMetaspaceSize=*`. Default: `true`.
-- `extraArgs`: Additional JVM args to append (e.g., `["-Dkotlin.daemon.useFallbackStrategy=true"]`).
+- `includeGradleDefaults`: When `true`, restores Gradle safety flags that are dropped when `org.gradle.jvmargs` is set: `-XX:+HeapDumpOnOutOfMemoryError` and `-Dfile.encoding=UTF-8`. Default: `true`.
+- `extraArgs`: Additional JVM args to append (e.g., `["-Dkotlin.daemon.useFallbackStrategy=true"]`). Memory tokens (`-Xmx*`, `-XX:MaxMetaspaceSize=*`) are ignored here so `xmx` / `maxMetaspace` stay authoritative; conflicting safety tokens are ignored when `includeGradleDefaults` is `true`.
+- `kotlinDaemonJvmArgs`: Optional value for `kotlin.daemon.jvmargs` (separate Kotlin compiler daemon). Example: `"-Xmx1500m"`.
 
 Units follow standard JVM notation: `m` for megabytes, `g` for gigabytes.
 
@@ -69,8 +71,10 @@ Units follow standard JVM notation: `m` for megabytes, `g` for gigabytes.
 
 - Ensures a single `org.gradle.jvmargs` entry exists in `android/gradle.properties`.
 - Always sets `-Xmx<xmx>` and `-XX:MaxMetaspaceSize=<maxMetaspace>`.
+- By default, also ensures `-XX:+HeapDumpOnOutOfMemoryError` and `-Dfile.encoding=UTF-8` (Gradle replaces defaults when this property is set).
 - When `merge` is true (default), preserves other existing tokens and appends any `extraArgs`.
-- When `merge` is false, fully normalizes the value to only the plugin-managed tokens (plus `extraArgs`).
+- When `merge` is false, fully normalizes the value to only the plugin-managed tokens (plus safety defaults / `extraArgs`).
+- Optionally writes `kotlin.daemon.jvmargs` when `kotlinDaemonJvmArgs` is provided.
 
 ## Verify Locally
 
@@ -87,12 +91,12 @@ cat android/gradle.properties
 You should see a normalized line similar to:
 
 ```
-org.gradle.jvmargs=-Xmx2048m -XX:MaxMetaspaceSize=512m [other tokens if merge=true]
+org.gradle.jvmargs=-Xmx2048m -XX:MaxMetaspaceSize=512m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8 [other tokens if merge=true]
+```
 
 ### Continuous Native Generation (CNG)
 
 In projects using Continuous Native Generation, config plugins are applied automatically during development and builds. Keep the plugin listed under `expo.plugins` and use `expo run:android` or EAS Build — no manual prebuild is required. See Expo docs for details.
-```
 
 ## Troubleshooting
 
@@ -102,7 +106,7 @@ In projects using Continuous Native Generation, config plugins are applied autom
 
 ## FAQ
 
-- Why only heap and metaspace? These are the most common and impactful settings for Gradle memory stability across environments.
+- Why only heap and metaspace? They are the most common OOM levers for the Gradle daemon. The plugin also restores Gradle's safety defaults (`HeapDumpOnOutOfMemoryError`, UTF-8) unless disabled, and can set `kotlin.daemon.jvmargs` for the separate Kotlin compiler daemon.
 - Do I need to commit `android/gradle.properties`? In Managed projects, it’s generated; commit behavior is up to your workflow. The plugin ensures the property is normalized either way.
 - Will it conflict with other plugins? This plugin updates only the `org.gradle.jvmargs` property. With `merge: true`, other tokens are preserved; set `merge: false` if you want strict normalization.
 
@@ -113,6 +117,9 @@ In projects using Continuous Native Generation, config plugins are applied autom
 - App config: https://docs.expo.dev/workflow/configuration
 - Continuous Native Generation: https://docs.expo.dev/workflow/continuous-native-generation
 - Config plugin dev/debugging: https://docs.expo.dev/config-plugins/development-and-debugging/
+- Gradle build environment: https://docs.gradle.org/current/userguide/build_environment.html
+- Configuring Gradle JVM memory: https://docs.gradle.org/current/userguide/config_gradle.html
+- Kotlin daemon JVM args: https://kotlinlang.org/docs/kotlin-daemon.html
 
 ## Contributing
 
@@ -126,8 +133,8 @@ Contributions are very welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for local
 
 ### Testing
 
-- Unit tests use Jest with a mock of `@expo/config-plugins`.
-- Run tests locally after installing dev deps: `npm i -D jest` then `npm test`.
+- Unit tests are TypeScript (Jest + `ts-jest`) with a mock of `@expo/config-plugins`.
+- Run tests locally after installing deps: `yarn install` then `yarn test`.
 
 ## License
 

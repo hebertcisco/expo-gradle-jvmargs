@@ -1,9 +1,12 @@
 # Exclude hidden directories and config files
 /.*/
 /*.tgz
-/babel.config.js
-/jest.config.js
+/jest.config.ts
+/eslint.config.ts
 /tsconfig.json
+/tsconfig.build.json
+/tsconfig.app.json
+/app.plugin.ts
 
 # Test and mock directories
 __mocks__

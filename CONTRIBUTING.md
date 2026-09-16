@@ -7,7 +7,7 @@ Thanks for taking the time to contribute! This document outlines a lightweight p
 - Node 18+ recommended.
 - Fork and clone the repo, then install dependencies:
   ```bash
-  npm install
+  yarn install
   ```
 
 ## Development Workflow
@@ -15,7 +15,8 @@ Thanks for taking the time to contribute! This document outlines a lightweight p
 This package exposes an Expo config plugin via `app.plugin.js` that re-exports from `plugin/build`.
 The plugin uses `createRunOncePlugin` to avoid duplicate execution.
 
-- Make your changes in `plugin/build/withGradleJvmArgs.js` (or its source if you add TS).
+- Edit TypeScript in `plugin/src/`, then run `yarn build` (emits `plugin/build/` and root `app.plugin.js`).
+- Run `yarn typecheck`, `yarn test`, and `yarn lint` before opening a PR.
 - Test by linking or using a local path in an Expo app's config and running:
   ```bash
   npx expo prebuild -p android

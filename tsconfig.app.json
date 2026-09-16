@@ -8,15 +8,10 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "moduleResolution": "node",
-    "noEmit": true,
-    "types": ["node", "jest"]
+    "declaration": false,
+    "rootDir": ".",
+    "outDir": ".",
+    "types": ["node"]
   },
-  "include": [
-    "plugin/src/**/*.ts",
-    "app.plugin.ts",
-    "__tests__/**/*.ts",
-    "jest.config.ts",
-    "eslint.config.ts"
-  ],
-  "exclude": ["node_modules", "plugin/build"]
+  "files": ["./app.plugin.ts"]
 }
